@@ -1,38 +1,16 @@
 import urequests
 import struct
-import cellular
 
-def group_stations(s):
-    by_op = {}
-    best = None
-    best_count = 0
-    for mcc, mnc, lac, cell_id, bsic, rx_full, rx_sub, arfcn in s:
-        grp = mcc, mnc
-        if grp not in by_op:
-            by_op[grp] = []
-        by_op[grp].append((lac, cell_id, rx_full))
-        count = len(by_op[grp])
-        if best is None or count > best_count:
-            best_count = count
-            best = grp
-
-    return best[0], best[1], by_op[best]
-
-def get_location_radiocells():
-    s = cellular.stations()
-    if len(s) == 0:
-        raise ValueError("No stations reported by GSM module")
-    c = dict(cellTowers=list(dict(cellId=cell_id, locationAreaCode=lac, mobileCountryCode=mcc, mobileNetworkCode=mnc) for mcc, mnc, lac, cell_id, bsic, rx_full, rx_sub, arfcn in s))
+def get_location_radiocells(agps_data):
+    mcc, mnc, cells = agps_data
+    c = dict(cellTowers=list(dict(cellId=cell_id, locationAreaCode=lac, mobileCountryCode=mcc, mobileNetworkCode=mnc) for lac, cell_id, _ in cells))
     r = urequests.post('https://backend.radiocells.org/', json=c)
     json = r.json()
     if "location" in json:
         return json["location"]["lng"], json["location"]["lat"]
 
-def get_location_opencellid(api_key):
-    s = cellular.stations()
-    if len(s) == 0:
-        raise ValueError("No stations reported by GSM module")
-    mcc, mnc, cells = group_stations(s)
+def get_location_opencellid(agps_data, api_key):
+    mcc, mnc, cells = agps_data
     c = dict(token=api_key, radio="gsm", mcc=mcc, mnc=mnc, cells=tuple(
         dict(cid=cid, lac=lac)
         for lac, cid, _ in cells
@@ -88,11 +66,8 @@ def __bin_search__(f, match, fmt, stride, l):
             raise ValueError("Corrupted table: {} </= {} </= {}".format(head_val, c_val, tail_val))
 
 
-def get_location_local(fname):
-    s = cellular.stations()
-    if len(s) == 0:
-        raise ValueError("No stations reported by GSM module")
-    mcc, mnc, cells = group_stations(s)
+def get_location_local(agps_data, fname):
+    mcc, mnc, cells = agps_data
     mnc //= 10
     x = y = n = 0
     with open(fname, 'rb') as f:
