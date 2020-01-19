@@ -30,7 +30,7 @@ Create a binary database of GSM cells:
 Filtering is done through entries `mcc` - mobile country code, `mnc` - mobile network code and `circle` - location and radius of a circle with cells.
 All entries are optional, however, the full worldwide database is as large as 1Gb.
 Providing `mcc` and `mnc` will reduce the databse size down to few Mb.
-Providing a circle will further filter data towards the circular area specified: 3 km of urban area results in around 10Kb of data.
+Providing a `circle` will further filter data towards the circular area specified: 3 km of urban area results in around 10Kb of data.
 
 Note that the token is optional: without a proper token, the script will fall back to a git mirror which may contain outdated data.
 
