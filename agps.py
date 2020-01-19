@@ -1,5 +1,8 @@
-import urequests
 import struct
+try:
+    import urequests
+except ImportError:
+    pass
 
 def get_location_radiocells(agps_data):
     mcc, mnc, cells = agps_data
