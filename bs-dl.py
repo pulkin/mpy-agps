@@ -18,6 +18,7 @@ earth_radius = 6.3781e6
 def download_and_repack(country_code=None, network_code=None, circle=None, token=None, source=None, destination=None, byte_order="b", verbose=False):
     """
     Downloads and packs the base station data.
+    So far, only opencellid.org supported.
     Args:
         country_code (int): the country code;
         network_code (int): the network code;
@@ -52,11 +53,16 @@ def download_and_repack(country_code=None, network_code=None, circle=None, token
 
     if source is None:
         if token is None:
-            raise ValueError("Either token or source file name have to be specified")
-        if country_code is None:
-            url = "https://opencellid.org/ocid/downloads?token={token}&type=full&file=cell_towers.csv.gz".format(token=token)
+            v("No token specified: downloading from git")
+            if country_code is None:
+                raise ValueError("Cannot download worldwide database yet")
+            else:
+                url = "https://github.com/pulkin/agps-data/raw/master/opencellid.org/{country_code}.csv.gz".format(country_code=country_code)
         else:
-            url = "https://opencellid.org/ocid/downloads?token={token}&type=mcc&file={country_code}.csv.gz".format(token=token, country_code=country_code)
+            if country_code is None:
+                url = "https://opencellid.org/ocid/downloads?token={token}&type=full&file=cell_towers.csv.gz".format(token=token)
+            else:
+                url = "https://opencellid.org/ocid/downloads?token={token}&type=mcc&file={country_code}.csv.gz".format(token=token, country_code=country_code)
         v("Downloading {} ...".format(url))
         response = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}))
         buf = io.BytesIO(response.read())
