@@ -46,3 +46,8 @@ agps.get_location_local(cellular.agps_station_data(), "234-3.bin")
 (3.484547378491735, 78.86739615869062)
 ```
 
+Raw data
+--------
+
+Please find [here](https://github.com/pulkin/agps-data).
+
