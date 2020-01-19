@@ -1,4 +1,5 @@
-mpy-agps
+micropython-agps
+----------------
 
 For use with [micropython on GPRS module A9/A9G](https://github.com/pulkin/micropython/tree/master/ports/gprs_a9).
 
