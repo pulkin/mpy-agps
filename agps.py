@@ -10,7 +10,7 @@ def get_location_radiocells(agps_data):
     r = urequests.post('https://backend.radiocells.org/', json=c)
     json = r.json()
     if "location" in json:
-        return json["location"]["lng"], json["location"]["lat"]
+        return json["location"]["lat"], json["location"]["lng"]
 
 def get_location_opencellid(agps_data, api_key):
     mcc, mnc, cells = agps_data
@@ -21,7 +21,7 @@ def get_location_opencellid(agps_data, api_key):
     r = urequests.post('https://eu1.unwiredlabs.com/v2/process.php', json=c)
     json = r.json()
     if "status" in json and json["status"] == "ok":
-        return json["lon"], json["lat"]
+        return json["lat"], json["lon"]
     else:
         raise RuntimeError("Failed to fetch response: {}".format(json))
 
@@ -102,5 +102,5 @@ def get_location_local(agps_data, fname):
                 n += w
     if n == 0:
         raise ValueError("Failed to identify a single station")
-    return x / n, y / n
+    return y / n, x / n
 
