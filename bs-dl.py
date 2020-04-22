@@ -22,7 +22,7 @@ def download_and_repack(country_code=None, network_code=None, circle=None, token
     Args:
         country_code (int): the country code;
         network_code (int): the network code;
-        circle (tuple): longitude, latitude (degrees) and radius in km;
+        circle (tuple): latitude, longitude (degrees) and radius in km;
         token (str): service token;
         source (str): downloaded file name;
         destination (str): destination file name;
@@ -99,7 +99,7 @@ def download_and_repack(country_code=None, network_code=None, circle=None, token
         v(" -> {:d}".format(len(data)))
     if circle is not None:
         v(" - circle: {:d}".format(len(data)), end="")
-        phi0, theta0, r0 = circle
+        theta0, phi0, r0 = circle
         theta = (data["lat"] - theta0) * numpy.pi / 180
         phi = (data["lon"] - phi0) * numpy.pi / 180
         mask = (theta ** 2 + phi ** 2 * numpy.cos(theta0) ** 2) < (r0 * 1e3 / earth_radius) ** 2
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Downloads and unpacks base station data")
     parser.add_argument("--mcc", help="mobile country code", metavar="INT", type=int, default=defaults["country_code"])
     parser.add_argument("--mnc", help="mobile network code", metavar="INT", type=int, default=defaults["network_code"])
-    parser.add_argument("--circle", help="limit stations to a circle", metavar="LON,LAT,R", default=c2s(defaults["circle"]))
+    parser.add_argument("--circle", help="limit stations to a circle", metavar="LAT,LON,R", default=c2s(defaults["circle"]))
     parser.add_argument("--token", help="access token", metavar="TOKEN", type=str, default=defaults["token"])
     parser.add_argument("--source", help="a file name to unpack from", metavar="FILENAME", type=str, default=defaults["source"])
     parser.add_argument("--destination", help="a file name to unpack to", metavar="FILENAME", type=str, default=defaults["destination"])

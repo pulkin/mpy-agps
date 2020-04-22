@@ -24,7 +24,21 @@ agps.get_location_opencellid(cellular.agps_station_data(), "api-token") # Please
 Create a binary database of GSM cells:
 
 ```bash
-./bs-dl.py --mcc 234 --mnc 3 --circle=-0.118092,51.509865,3 -v --token api-token # Please visit https://opencellid.org for getting your API token
+~ ./bs-dl.py --mcc 234 --mnc 10 --circle=51.509865,-0.118092,3 -v --token api-token # Please visit https://opencellid.org for getting your API token
+Target: 234-10.bin
+Downloading https://opencellid.org/ocid/downloads?token=e808971d6d2508&type=mcc&file=234.csv.gz ...
+Unzipping ...
+Parsing ...
+Filtering ...
+ - mcc: 322671 -> 322671
+ - mnc: 322671 -> 99367
+ - circle: 99367 -> 2749
+Sorting ...
+Items total: 2749
+Preparing tables ...
+Saving ...
+Total size: 33010 bytes
+Done
 ```
 
 Filtering is done through entries `mcc` - mobile country code, `mnc` - mobile network code and `circle` - location and radius of a circle with cells.
@@ -37,7 +51,7 @@ Note that the token is optional: without a proper token, the script will fall ba
 Then, upload the database to the module (note the file name):
 
 ```bash
-ampy --port /dev/ttyUSB0 put 234-3.bin
+ampy --port /dev/ttyUSB0 put 234-10.bin
 ```
 
 Finally, determine the location (no data connection needed):
@@ -46,8 +60,8 @@ Finally, determine the location (no data connection needed):
 # Get location
 import agps
 import cellular
-agps.get_location_local(cellular.agps_station_data(), "234-3.bin")
-(3.484547378491735, 78.86739615869062)
+agps.get_location_local(cellular.agps_station_data(), "234-10.bin")
+(51.54547378491735, -0.11739615869062)
 ```
 
 Raw data
