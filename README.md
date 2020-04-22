@@ -16,7 +16,7 @@ cellular.gprs("apn", "user", "pass")
 # Get location
 import agps
 agps.get_location_opencellid(cellular.agps_station_data(), "api-token") # Please visit https://opencellid.org for getting your API token
-(3.484547378491735, 78.86739615869062)
+(78.86739615869062, 3.484547378491735)
 ```
 
 ### Location using local database:
